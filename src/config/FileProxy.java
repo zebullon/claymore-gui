@@ -100,7 +100,7 @@ public class FileProxy {
 			}
     		    		
     		for (String pool : conf.getPools()){
-    			epoolsWriter.write(String.format("POOL: %s, WALLET: %s, PSW: %s", pool, conf.getWallet(), conf.getPassword()));
+    			epoolsWriter.write(String.format("POOL: %s", pool));
     			epoolsWriter.newLine();
     		}
 		} catch (FileNotFoundException e) {
