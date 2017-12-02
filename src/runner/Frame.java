@@ -139,6 +139,7 @@ public class Frame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 comboBoxCurrency.setModel(new DefaultComboBoxModel(FileProxy.getCurrenciesList()));
                 Environment.setCurrentAlgorythm(comboBoxAlgorythm.getSelectedItem().toString());
+                initCurrencies();
                 loadConfigData();
             }
         });
