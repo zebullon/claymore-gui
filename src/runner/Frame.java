@@ -24,7 +24,7 @@ public class Frame extends JFrame {
     private JTextField textWallet = new JTextField("", 20);
     private JLabel labelHashCnt = new JLabel("Hash count:");
     private JTextField textHashCnt = new JTextField("1024", 4);
-    private JLabel labelPool = new JLabel("Main pool:");
+    private JLabel labelPool = new JLabel("Pools:");
     private JTextField textPool = new JTextField("", 20);
     private JLabel labelAlgo = new JLabel("Algorythm:");
     private JComboBox comboBoxAlgo = new JComboBox();
@@ -36,14 +36,16 @@ public class Frame extends JFrame {
     private JComboBox comboBoxAlgorythm = new JComboBox();
     private JLabel labelRestartIn = new JLabel("Restart in:");
     private JTextField textRestartIn = new JTextField("1");
+    private JLabel labelNoFee = new JLabel("No fee:");
+    private JCheckBox checkBoxNoFee = new JCheckBox();
 
     public Frame(){
         super("Claymore Runner");
-        this.setBounds(100,100,800,200);
+        this.setBounds(100,100,800,300);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        GridLayout mainLayout = new GridLayout(9,2,2,2);
+        GridLayout mainLayout = new GridLayout(10,2,2,2);
 
         Container container = this.getContentPane();
         container.setLayout(mainLayout);
@@ -84,7 +86,9 @@ public class Frame extends JFrame {
                 .addPool(textPool.getText())
                 .hashCount(textHashCnt.getText())
                 .enabledCards(textEnabledCards.getText())
-                .restartIn(textRestartIn.getText());
+                .restartIn(textRestartIn.getText())
+                .noFee(checkBoxNoFee.isSelected());
+
         config.writeToFile();
         saveLastCurrency();
     }
@@ -116,6 +120,9 @@ public class Frame extends JFrame {
         container.add(labelRestartIn);
         container.add(textRestartIn);
 
+        container.add(labelNoFee);
+        container.add(checkBoxNoFee);
+
         container.add(buttonSave);
         container.add(buttonRun);
     }
@@ -129,6 +136,7 @@ public class Frame extends JFrame {
         labelEnabledCards.setHorizontalAlignment(JLabel.RIGHT);
         labelAlgorythm.setHorizontalAlignment(JLabel.RIGHT);
         labelRestartIn.setHorizontalAlignment(JLabel.RIGHT);
+        labelNoFee.setHorizontalAlignment(JLabel.RIGHT);
     }
 
     private void initAlgorythm(){
@@ -179,6 +187,7 @@ public class Frame extends JFrame {
             this.comboBoxAlgo.setSelectedIndex(Integer.parseInt(config.getAlgo()) - 1 );
             this.textEnabledCards.setText(config.getEnabledCards());
             this.textRestartIn.setText(config.getRestartIn());
+            this.checkBoxNoFee.setSelected(config.isNoFee());
         } else {
             this.textWallet.setText("");
             this.textHashCnt.setText("1024");
@@ -186,6 +195,7 @@ public class Frame extends JFrame {
             this.comboBoxAlgo.setSelectedIndex(0);
             this.textEnabledCards.setText("");
             this.textRestartIn.setText("1");
+            this.checkBoxNoFee.setSelected(false);
         }
     }
 

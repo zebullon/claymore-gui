@@ -50,6 +50,10 @@ public class Configuration {
 	public String getEnabledCards() { return this.options.get(ParameterConstants.enabledCards); }
 
 	public String getRestartIn() { return  this.options.get(ParameterConstants.restart ); }
+
+	public boolean isNoFee() {
+		return this.options.containsKey(ParameterConstants.nofee);
+	}
 	
 	// OPTIONS
 	
@@ -102,6 +106,15 @@ public class Configuration {
 
 	public Configuration restartIn(String time){
 		this.options.put(ParameterConstants.restart, time);
+		return this;
+	}
+
+	public Configuration noFee(boolean noFee){
+		if (noFee) {
+			this.options.put(ParameterConstants.nofee, "1");
+		} else {
+			this.options.remove(ParameterConstants.nofee);
+		}
 		return this;
 	}
 
@@ -159,7 +172,7 @@ public class Configuration {
 		static final String hashCnt = "-h";
 		static final String lowint = "-li";
 		static final String mclock = "-mclock";
-		static final String pool = "-o";
+		static final String nofee = "-nofee";
 		static final String powlim = "-powlim";
 		static final String psw = "-p";
 		static final String restart = "-r";
