@@ -139,11 +139,8 @@ public class Configuration {
 	
 	// POOLS
 	
-	public Configuration addPool(String poolAddrs){
-		String[] poolAddresses = poolAddrs.replace(" ", "").split(",");
-		for (String poolAddr : poolAddresses) {
-			this.pools.add(poolAddr);
-		}
+	public Configuration addPool(String poolAddr){
+		this.pools.add(poolAddr);
 		return this;
 	}
 	

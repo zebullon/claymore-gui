@@ -174,7 +174,7 @@ public class Frame extends JFrame {
         if (config != null) {
             this.textWallet.setText(config.getWallet());
             this.textHashCnt.setText(config.getHashCnt());
-            this.textPool.setText(loadPools(config));
+            this.textPool.setText(config.getPools().get(0));
             this.comboBoxAlgo.setSelectedIndex(Integer.parseInt(config.getAlgo()) - 1 );
             this.textEnabledCards.setText(config.getEnabledCards());
             this.textRestartIn.setText(config.getRestartIn());
@@ -186,19 +186,6 @@ public class Frame extends JFrame {
             this.textEnabledCards.setText("");
             this.textRestartIn.setText("1");
         }
-    }
-
-    private String loadPools(Configuration config){
-        StringBuilder builder = new StringBuilder();
-        int poolsCount = config.getPools().size();
-
-        for (int i = 0; i < poolsCount; i++){
-            builder.append(config.getPools().get(i));
-            if (i < poolsCount - 1){
-                builder.append(", ");
-            }
-        }
-        return builder.toString();
     }
 
     private void saveLastCurrency(){
