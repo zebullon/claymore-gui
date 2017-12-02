@@ -13,31 +13,32 @@ import java.awt.event.ActionListener;
  * Created by kkostya on 23.11.17.
  */
 public class Frame extends JFrame {
-
-    private final int buttonWidth = 100;
-    private final int buttonHeight = 50;
-    private final Dimension buttonSize = new Dimension(buttonWidth, buttonHeight);
-
+    private JTextField textWallet = new JTextField("", 20);
+    private JTextField textHashCnt = new JTextField("1024", 4);
+    private JTextField textPool = new JTextField("", 20);
+    private JComboBox comboBoxAlgo = new JComboBox();
+    private JComboBox comboBoxCurrency = new JComboBox();
+    private JTextField textEnabledCards = new JTextField("");
+    private JComboBox comboBoxAlgorythm = new JComboBox();
+    private JTextField textRestartIn = new JTextField("1");
+    private JCheckBox checkBoxNoFee = new JCheckBox();
+    private JCheckBox checkBoxStart = new JCheckBox();
     private JButton buttonSave = new JButton("Save");
     private JButton buttonRun = new JButton("Run");
-    private JLabel labelWallet = new JLabel("Wallet:");
-    private JTextField textWallet = new JTextField("", 20);
-    private JLabel labelHashCnt = new JLabel("Hash count:");
-    private JTextField textHashCnt = new JTextField("1024", 4);
-    private JLabel labelPool = new JLabel("Pools:");
-    private JTextField textPool = new JTextField("", 20);
-    private JLabel labelAlgo = new JLabel("Algorythm:");
-    private JComboBox comboBoxAlgo = new JComboBox();
-    private JLabel labelCurrency = new JLabel("Currency:");
-    private JComboBox comboBoxCurrency = new JComboBox();
-    private JLabel labelEnabledCards = new JLabel("Enabled cards:");
-    private JTextField textEnabledCards = new JTextField("");
-    private JLabel labelAlgorythm = new JLabel("Algorythm:");
-    private JComboBox comboBoxAlgorythm = new JComboBox();
-    private JLabel labelRestartIn = new JLabel("Restart in:");
-    private JTextField textRestartIn = new JTextField("1");
-    private JLabel labelNoFee = new JLabel("No fee:");
-    private JCheckBox checkBoxNoFee = new JCheckBox();
+
+    private final JComponent[] components = new JComponent[]{
+            new JLabel("Algorythm:"), comboBoxAlgorythm,
+            new JLabel("Currency:"), comboBoxCurrency,
+            new JLabel("Algorythm:"), comboBoxAlgo,
+            new JLabel("Wallet:"), textWallet,
+            new JLabel("Hash count:"), textHashCnt,
+            new JLabel("Pools:"), textPool,
+            new JLabel("Enabled cards:"), textEnabledCards,
+            new JLabel("Restart in:"), textRestartIn,
+            new JLabel("No fee:"), checkBoxNoFee,
+            new JLabel("Start with Windows:"), checkBoxStart,
+            buttonSave, buttonRun
+    };
 
     public Frame(){
         super("Claymore Runner");
@@ -45,7 +46,7 @@ public class Frame extends JFrame {
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        GridLayout mainLayout = new GridLayout(10,2,2,2);
+        GridLayout mainLayout = new GridLayout(components.length / 2,2,2,2);
 
         Container container = this.getContentPane();
         container.setLayout(mainLayout);
@@ -73,6 +74,7 @@ public class Frame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 saveConfig();
+
                 ClaymoreRunner.runMiner(comboBoxCurrency.getSelectedItem().toString());
             }
         });
@@ -94,49 +96,12 @@ public class Frame extends JFrame {
     }
 
     private void addComponentsToContainer(Container container){
-        setAlignment();
-
-        container.add(labelAlgorythm);
-        container.add(comboBoxAlgorythm);
-
-        container.add(labelCurrency);
-        container.add(comboBoxCurrency);
-
-        container.add(labelAlgo);
-        container.add(comboBoxAlgo);
-
-        container.add(labelWallet);
-        container.add(textWallet);
-
-        container.add(labelHashCnt);
-        container.add(textHashCnt);
-
-        container.add(labelPool);
-        container.add(textPool);
-
-        container.add(labelEnabledCards);
-        container.add(textEnabledCards);
-
-        container.add(labelRestartIn);
-        container.add(textRestartIn);
-
-        container.add(labelNoFee);
-        container.add(checkBoxNoFee);
-
-        container.add(buttonSave);
-        container.add(buttonRun);
-    }
-
-    private void setAlignment(){
-        labelWallet.setHorizontalAlignment(JLabel.RIGHT);
-        labelHashCnt.setHorizontalAlignment(JLabel.RIGHT);
-        labelCurrency.setHorizontalAlignment(JLabel.RIGHT);
-        labelPool.setHorizontalAlignment(JLabel.RIGHT);
-        labelAlgo.setHorizontalAlignment(JLabel.RIGHT);
-        labelEnabledCards.setHorizontalAlignment(JLabel.RIGHT);
-        labelAlgorythm.setHorizontalAlignment(JLabel.RIGHT);
-        labelRestartIn.setHorizontalAlignment(JLabel.RIGHT);
-        labelNoFee.setHorizontalAlignment(JLabel.RIGHT);
+        for (JComponent component : components){
+            if (component instanceof JLabel){
+                ((JLabel)component).setHorizontalAlignment(JLabel.RIGHT);
+            }
+            container.add(component);
+        }
     }
 
     private void initAlgorythm(){

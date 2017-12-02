@@ -60,3 +60,8 @@ resources/pools/BIP_epools.txt
 resources/pools/ETN_epools.txt
 resources/pools/SUMO_epools.txt
 resources/pools/XUN_epools.txt
+out/artifacts/ClaymoreRunner/resources/configs/KRB_config.txt
+out/artifacts/ClaymoreRunner.rar
+out/artifacts/ClaymoreRunner/resources/configs/XMR_config.txt
+out/artifacts/ClaymoreRunner/resources/pools/KRB_epools.txt
+out/artifacts/ClaymoreRunner/resources/pools/XMR_epools.txt
