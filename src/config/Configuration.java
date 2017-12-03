@@ -7,6 +7,7 @@ import java.util.Map;
 public abstract class Configuration {
 	private static final String ALL_POOLS = "-allpools";
 	private static final String ALL_COINS = "-allcoins";
+	private static final String ASM_MODE = "-asm";
 	private static final String CORE_CLOCK = "-cclock";
 	private static final String DEBUG = "-dbg";
 	private static final String ENABLED_CARDS = "-di";
@@ -83,6 +84,8 @@ public abstract class Configuration {
 
 	public String getAlgo() { return this.options.get(getAlgoKey()); }
 
+	public boolean isAsmMode() { return this.options.containsKey(ASM_MODE); }
+
 	public String getIntensity() { return this.options.get(getIntensityKey());}
 
 	public String getEnabledCards() { return this.options.get(ENABLED_CARDS); }
@@ -137,6 +140,11 @@ public abstract class Configuration {
 
 	public Configuration intensity(String intencity){
 		this.options.put(getIntensityKey(), intencity);
+		return this;
+	}
+
+	public Configuration asmMode(boolean asmMode){
+		this.options.put(ASM_MODE, asmMode ? "1" : "0");
 		return this;
 	}
 	

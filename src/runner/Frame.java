@@ -20,6 +20,7 @@ public class Frame extends JFrame {
     private JTextField textHashCnt = new JTextField("1024", 4);
     private JTextField textPool = new JTextField("", 20);
     private JComboBox comboBoxAlgo = new JComboBox();
+    private JCheckBox checkBoxAsmMode = new JCheckBox();
     private JComboBox comboBoxCurrency = new JComboBox();
     private JTextField textEnabledCards = new JTextField("ALL CARDS");
     private JComboBox comboBoxAlgorythm = new JComboBox();
@@ -34,6 +35,7 @@ public class Frame extends JFrame {
             new JLabel("Mining:"), comboBoxAlgorythm,
             new JLabel("Currency:"), comboBoxCurrency,
             new JLabel("Algorythm:"), comboBoxAlgo,
+            new JLabel("ASM mode:"), checkBoxAsmMode,
             new JLabel("Wallet:"), textWallet,
             new JLabel("Password (e-mail):"), textPassword,
             new JLabel("Mining intensity:"), textMiningIntencity,
@@ -93,6 +95,7 @@ public class Frame extends JFrame {
                 .walletAddr(textWallet.getText())
                 .password(textPassword.getText())
                 .intensity(textMiningIntencity.getText())
+                .asmMode(checkBoxAsmMode.isSelected())
                 .addPool(textPool.getText())
                 .enabledCards(textEnabledCards.getText())
                 .restartIn(textRestartIn.getText())
@@ -132,8 +135,11 @@ public class Frame extends JFrame {
     }
 
     private void lockForbiddenFields(){
-        textHashCnt.setEnabled(Environment.getCurrentAlgorythm() == Algorythm.CRYPTONIGHT);
-        textMiningIntencity.setEnabled(Environment.getCurrentAlgorythm() != Algorythm.CRYPTONIGHT);
+        boolean isCryptoNight = Environment.getCurrentAlgorythm() == Algorythm.CRYPTONIGHT;
+
+        checkBoxAsmMode.setEnabled(! isCryptoNight);
+        textHashCnt.setEnabled(isCryptoNight);
+        textMiningIntencity.setEnabled(! isCryptoNight);
     }
 
     private void initCurrencies(){
@@ -171,6 +177,7 @@ public class Frame extends JFrame {
             this.textWallet.setText(config.getWallet());
             this.textPassword.setText(config.getPassword());
             this.textMiningIntencity.setText(config.getIntensity());
+            this.checkBoxAsmMode.setSelected(config.isAsmMode());
             this.textHashCnt.setText(config.getHashCnt());
             this.textPool.setText(loadPools(config));
             this.comboBoxAlgo.setSelectedIndex(Integer.parseInt(config.getAlgo()) - 1 );
@@ -186,6 +193,7 @@ public class Frame extends JFrame {
             this.textWallet.setText("");
             this.textPassword.setText("x");
             this.textMiningIntencity.setText("");
+            this.checkBoxAsmMode.setSelected(Environment.getCurrentAlgorythm() != Algorythm.CRYPTONIGHT);
             this.textHashCnt.setText("1024");
             this.textPool.setText("");
             this.comboBoxAlgo.setSelectedIndex(0);

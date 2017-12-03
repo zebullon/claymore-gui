@@ -34,6 +34,11 @@ public class CryptoNightConfiguration extends Configuration {
     }
 
     @Override
+    public boolean isAsmMode() {
+        return false;
+    }
+
+    @Override
     protected void setDefaultValues(){
         super.setDefaultValues();
         this.options.put(getAlgoKey(), "1");
@@ -47,6 +52,11 @@ public class CryptoNightConfiguration extends Configuration {
 
     @Override
     public Configuration intensity(String intencity){
+        return this;
+    }
+
+    @Override
+    public Configuration asmMode(boolean asmMode){
         return this;
     }
 }
