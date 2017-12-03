@@ -36,7 +36,6 @@ public class Frame extends JFrame {
             new JLabel("Enabled cards:"), textEnabledCards,
             new JLabel("Restart in:"), textRestartIn,
             new JLabel("No fee:"), checkBoxNoFee,
-            new JLabel("Start with Windows:"), checkBoxStart,
             buttonSave, buttonRun
     };
 
@@ -74,7 +73,7 @@ public class Frame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 saveConfig();
-
+                //FileProxy.setStartToAutoLoad(checkBoxStart.isSelected());
                 ClaymoreRunner.runMiner(comboBoxCurrency.getSelectedItem().toString());
             }
         });

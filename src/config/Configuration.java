@@ -12,10 +12,19 @@ public class Configuration {
 	
 	public Configuration(String currencyName){
 		this.currencyName = currencyName;
-		this.options = new HashMap<String, String>();
+		this.options = new HashMap<String, String>(){
+			@Override
+			public String put (String key, String value){
+				if (value.equals("")){
+					return this.remove(key);
+				}
+				return super.put(key, value);
+			}
+		};
+
 		this.pools = new ArrayList<String>();
 		setDefaultValues();
-		
+
 		Environment.getCachedConfigs().put(currencyName, this);
 	}
 	
@@ -98,9 +107,7 @@ public class Configuration {
 	}
 
 	public Configuration enabledCards(String cards){
-		if (! cards.equals("")) {
-			this.options.put(ParameterConstants.enabledCards, cards);
-		}
+		this.options.put(ParameterConstants.enabledCards, cards);
 		return this;
 	}
 
