@@ -244,6 +244,19 @@ public class FileProxy {
 		return result;
 	}
 
+	public static void logError(Exception ex){
+		PrintWriter errLogWriter = null;
+		try {
+			errLogWriter = new PrintWriter(String.format("%s/%s", System.getProperty("user.dir"), "logError.txt"));
+			errLogWriter.println(ex.getMessage());
+			ex.printStackTrace(errLogWriter);
+		} catch (IOException e){
+			System.console().writer().println(e.getMessage());
+		} finally {
+			errLogWriter.close();
+		}
+	}
+
 //	public static void setStartToAutoLoad(boolean start){
 //		Path link = new File(getStartupFolder()).toPath();
 //		Path existing = new File(String.format("%s/%s", getMinerPath(Environment.getCurrentAlgorythm()).toString(), "start.lnk")).toPath();
