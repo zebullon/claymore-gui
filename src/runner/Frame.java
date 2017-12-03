@@ -50,7 +50,7 @@ public class Frame extends JFrame {
 
     public Frame(){
         super("Claymore Runner");
-        this.setBounds(100,100,800,300);
+        this.setBounds(100,100,800,400);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
