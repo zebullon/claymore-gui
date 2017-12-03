@@ -20,4 +20,9 @@ public class EquihashConfiguration extends Configuration {
     protected String getAlgoKey() {
         return "-a";
     }
+
+    @Override
+    protected String getIntensityKey() {
+        return "-i";
+    }
 }

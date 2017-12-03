@@ -20,4 +20,9 @@ public class EthashConfiguration extends Configuration {
     protected String getAlgoKey() {
         return null;
     }
+
+    @Override
+    protected String getIntensityKey() {
+        return "-ethi";
+    }
 }

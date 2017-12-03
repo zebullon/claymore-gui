@@ -14,7 +14,9 @@ import java.awt.event.ActionListener;
  * Created by zebullon on 23.11.17.
  */
 public class Frame extends JFrame {
-    private JTextField textWallet = new JTextField("", 20);
+    private JTextField textWallet = new JTextField();
+    private JTextField textPassword = new JTextField("x");
+    private JTextField textMiningIntencity = new JTextField();
     private JTextField textHashCnt = new JTextField("1024", 4);
     private JTextField textPool = new JTextField("", 20);
     private JComboBox comboBoxAlgo = new JComboBox();
@@ -33,6 +35,8 @@ public class Frame extends JFrame {
             new JLabel("Currency:"), comboBoxCurrency,
             new JLabel("Algorythm:"), comboBoxAlgo,
             new JLabel("Wallet:"), textWallet,
+            new JLabel("Password (e-mail):"), textPassword,
+            new JLabel("Mining intensity:"), textMiningIntencity,
             new JLabel("Hash count:"), textHashCnt,
             new JLabel("Pools:"), textPool,
             new JLabel("Enabled cards:"), textEnabledCards,
@@ -54,6 +58,7 @@ public class Frame extends JFrame {
         container.setLayout(mainLayout);
 
         initAlgorythm();
+        lockForbiddenFields();
         initCurrencies();
         initButtonSave();
         initButtonRun();
@@ -86,6 +91,8 @@ public class Frame extends JFrame {
         Configuration config = Configuration.getNewConfig(currency)
                 .algorithm(String.valueOf(comboBoxAlgo.getSelectedIndex() + 1))
                 .walletAddr(textWallet.getText())
+                .password(textPassword.getText())
+                .intensity(textMiningIntencity.getText())
                 .addPool(textPool.getText())
                 .enabledCards(textEnabledCards.getText())
                 .restartIn(textRestartIn.getText())
@@ -117,11 +124,16 @@ public class Frame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 comboBoxCurrency.setModel(new DefaultComboBoxModel(FileProxy.getCurrenciesList()));
                 Environment.setCurrentAlgorythm(comboBoxAlgorythm.getSelectedItem().toString());
-                textHashCnt.setEnabled(Environment.getCurrentAlgorythm() == Algorythm.CRYPTONIGHT);
+                lockForbiddenFields();
                 initCurrencies();
                 loadConfigData();
             }
         });
+    }
+
+    private void lockForbiddenFields(){
+        textHashCnt.setEnabled(Environment.getCurrentAlgorythm() == Algorythm.CRYPTONIGHT);
+        textMiningIntencity.setEnabled(Environment.getCurrentAlgorythm() != Algorythm.CRYPTONIGHT);
     }
 
     private void initCurrencies(){
@@ -157,10 +169,12 @@ public class Frame extends JFrame {
 
         if (config != null) {
             this.textWallet.setText(config.getWallet());
+            this.textPassword.setText(config.getPassword());
+            this.textMiningIntencity.setText(config.getIntensity());
             this.textHashCnt.setText(config.getHashCnt());
             this.textPool.setText(loadPools(config));
             this.comboBoxAlgo.setSelectedIndex(Integer.parseInt(config.getAlgo()) - 1 );
-            if (! config.getEnabledCards().equals("")) {
+            if (config.getEnabledCards() != null) {
                 this.textEnabledCards.setText(config.getEnabledCards());
             } else {
                 this.textEnabledCards.setText("ALL CARDS");
@@ -170,6 +184,8 @@ public class Frame extends JFrame {
             this.checkBoxNoFee.setSelected(config.isNoFee());
         } else {
             this.textWallet.setText("");
+            this.textPassword.setText("x");
+            this.textMiningIntencity.setText("");
             this.textHashCnt.setText("1024");
             this.textPool.setText("");
             this.comboBoxAlgo.setSelectedIndex(0);

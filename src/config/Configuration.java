@@ -23,6 +23,7 @@ public abstract class Configuration {
 	protected abstract String getWalletKey();
 	protected abstract String getPasswordKey();
 	protected abstract String getAlgoKey();
+	protected abstract String getIntensityKey();
 
 	private final String currencyName;
 	protected final Map<String, String> options;
@@ -82,6 +83,8 @@ public abstract class Configuration {
 
 	public String getAlgo() { return this.options.get(getAlgoKey()); }
 
+	public String getIntensity() { return this.options.get(getIntensityKey());}
+
 	public String getEnabledCards() { return this.options.get(ENABLED_CARDS); }
 
 	public String getRestartIn() { return  this.options.get(RESTART); }
@@ -129,6 +132,11 @@ public abstract class Configuration {
 	}
 	
 	public Configuration hashCount(String hashCnt){
+		return this;
+	}
+
+	public Configuration intensity(String intencity){
+		this.options.put(getIntensityKey(), intencity);
 		return this;
 	}
 	

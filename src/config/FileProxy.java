@@ -96,8 +96,10 @@ public class FileProxy {
         	epoolsWriter = getWriter(String.format("%s/%s_%s", poolDir.getAbsolutePath(), conf.getCurrencyName(), epools));
     		
     		for (Entry<String, String> entry : conf.getOptions().entrySet()){
-				configWriter.write(String.format("%s %s", entry.getKey(), entry.getValue()));
-				configWriter.newLine();
+    			if (entry.getKey() != null) {
+					configWriter.write(String.format("%s %s", entry.getKey(), entry.getValue()));
+					configWriter.newLine();
+				}
 			}
     		    		
     		for (String pool : conf.getPools()){

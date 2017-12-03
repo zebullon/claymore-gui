@@ -24,6 +24,11 @@ public class CryptoNightConfiguration extends Configuration {
     }
 
     @Override
+    protected String getIntensityKey() {
+        return null;
+    }
+
+    @Override
     public String getHashCnt(){
         return this.options.get(HASH_COUNT);
     }
@@ -37,6 +42,11 @@ public class CryptoNightConfiguration extends Configuration {
     @Override
     public Configuration hashCount(String hashCnt){
         this.options.put(HASH_COUNT, hashCnt);
+        return this;
+    }
+
+    @Override
+    public Configuration intensity(String intencity){
         return this;
     }
 }
