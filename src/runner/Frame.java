@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Created by kkostya on 23.11.17.
+ * Created by zebullon on 23.11.17.
  */
 public class Frame extends JFrame {
     private JTextField textWallet = new JTextField("", 20);
@@ -19,11 +19,12 @@ public class Frame extends JFrame {
     private JTextField textPool = new JTextField("", 20);
     private JComboBox comboBoxAlgo = new JComboBox();
     private JComboBox comboBoxCurrency = new JComboBox();
-    private JTextField textEnabledCards = new JTextField("");
+    private JTextField textEnabledCards = new JTextField("ALL CARDS");
     private JComboBox comboBoxAlgorythm = new JComboBox();
     private JTextField textRestartIn = new JTextField("1");
     private JCheckBox checkBoxNoFee = new JCheckBox();
     private JCheckBox checkBoxStart = new JCheckBox();
+    private JCheckBox checkBoxLowIntensity = new JCheckBox();
     private JButton buttonSave = new JButton("Save");
     private JButton buttonRun = new JButton("Run");
 
@@ -36,6 +37,7 @@ public class Frame extends JFrame {
             new JLabel("Pools:"), textPool,
             new JLabel("Enabled cards:"), textEnabledCards,
             new JLabel("Restart in:"), textRestartIn,
+            new JLabel("Low intensity mode:"), checkBoxLowIntensity,
             new JLabel("No fee:"), checkBoxNoFee,
             buttonSave, buttonRun
     };
@@ -53,7 +55,6 @@ public class Frame extends JFrame {
 
         initAlgorythm();
         initCurrencies();
-        initAlgo();
         initButtonSave();
         initButtonRun();
 
@@ -88,6 +89,7 @@ public class Frame extends JFrame {
                 .addPool(textPool.getText())
                 .enabledCards(textEnabledCards.getText())
                 .restartIn(textRestartIn.getText())
+                .lowIntesity(checkBoxLowIntensity.isSelected())
                 .noFee(checkBoxNoFee.isSelected());
 
         if (Environment.getCurrentAlgorythm() == Algorythm.CRYPTONIGHT){
@@ -158,16 +160,22 @@ public class Frame extends JFrame {
             this.textHashCnt.setText(config.getHashCnt());
             this.textPool.setText(loadPools(config));
             this.comboBoxAlgo.setSelectedIndex(Integer.parseInt(config.getAlgo()) - 1 );
-            this.textEnabledCards.setText(config.getEnabledCards());
+            if (! config.getEnabledCards().equals("")) {
+                this.textEnabledCards.setText(config.getEnabledCards());
+            } else {
+                this.textEnabledCards.setText("ALL CARDS");
+            }
             this.textRestartIn.setText(config.getRestartIn());
+            this.checkBoxLowIntensity.setSelected(config.isLowIntensity());
             this.checkBoxNoFee.setSelected(config.isNoFee());
         } else {
             this.textWallet.setText("");
             this.textHashCnt.setText("1024");
             this.textPool.setText("");
             this.comboBoxAlgo.setSelectedIndex(0);
-            this.textEnabledCards.setText("");
+            this.textEnabledCards.setText("ALL CARDS");
             this.textRestartIn.setText("1");
+            this.checkBoxLowIntensity.setSelected(false);
             this.checkBoxNoFee.setSelected(false);
         }
     }

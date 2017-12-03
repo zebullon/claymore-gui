@@ -86,6 +86,8 @@ public abstract class Configuration {
 
 	public String getRestartIn() { return  this.options.get(RESTART); }
 
+	public boolean isLowIntensity() { return this.options.containsKey(LOW_INT); }
+
 	public boolean isNoFee() {
 		return this.options.containsKey(NO_FEE);
 	}
@@ -117,8 +119,12 @@ public abstract class Configuration {
 		return this;
 	}
 	
-	public Configuration lowIntesity() {
-		this.options.put(LOW_INT, "1");
+	public Configuration lowIntesity(boolean lowInt) {
+		if(lowInt) {
+			this.options.put(LOW_INT, "1");
+		} else {
+			this.options.remove(LOW_INT);
+		}
 		return this;
 	}
 	
@@ -132,7 +138,9 @@ public abstract class Configuration {
 	}
 
 	public Configuration enabledCards(String cards){
-		this.options.put(ENABLED_CARDS, cards);
+		if (! cards.equals("ALL CARDS")){
+			this.options.put(ENABLED_CARDS, cards);
+		}
 		return this;
 	}
 
