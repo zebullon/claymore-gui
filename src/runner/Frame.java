@@ -1,5 +1,6 @@
 package runner;
 
+import config.Algorythm;
 import config.Configuration;
 import config.Environment;
 import config.FileProxy;
@@ -27,7 +28,7 @@ public class Frame extends JFrame {
     private JButton buttonRun = new JButton("Run");
 
     private final JComponent[] components = new JComponent[]{
-            new JLabel("Algorythm:"), comboBoxAlgorythm,
+            new JLabel("Mining:"), comboBoxAlgorythm,
             new JLabel("Currency:"), comboBoxCurrency,
             new JLabel("Algorythm:"), comboBoxAlgo,
             new JLabel("Wallet:"), textWallet,
@@ -81,14 +82,17 @@ public class Frame extends JFrame {
 
     private void saveConfig(){
         String currency = comboBoxCurrency.getSelectedItem().toString();
-        Configuration config = new Configuration(currency)
+        Configuration config = Configuration.getNewConfig(currency)
                 .algorithm(String.valueOf(comboBoxAlgo.getSelectedIndex() + 1))
                 .walletAddr(textWallet.getText())
                 .addPool(textPool.getText())
-                .hashCount(textHashCnt.getText())
                 .enabledCards(textEnabledCards.getText())
                 .restartIn(textRestartIn.getText())
                 .noFee(checkBoxNoFee.isSelected());
+
+        if (Environment.getCurrentAlgorythm() == Algorythm.CRYPTONIGHT){
+            config.hashCount(textHashCnt.getText());
+        }
 
         config.writeToFile();
         saveLastCurrency();
@@ -111,6 +115,7 @@ public class Frame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 comboBoxCurrency.setModel(new DefaultComboBoxModel(FileProxy.getCurrenciesList()));
                 Environment.setCurrentAlgorythm(comboBoxAlgorythm.getSelectedItem().toString());
+                textHashCnt.setEnabled(Environment.getCurrentAlgorythm() == Algorythm.CRYPTONIGHT);
                 initCurrencies();
                 loadConfigData();
             }
@@ -129,8 +134,12 @@ public class Frame extends JFrame {
     }
 
     private void initAlgo(){
-        if (comboBoxAlgo.getModel().getSize() < 4) {
-            comboBoxAlgo.setModel(new DefaultComboBoxModel(new String[]{"a1", "a2", "a3", "a4"}));
+        comboBoxAlgo.setEnabled(true);
+
+        switch (Environment.getCurrentAlgorythm()){
+            case CRYPTONIGHT: comboBoxAlgo.setModel(new DefaultComboBoxModel(new String[]{"a1", "a2", "a3", "a4"})); break;
+            case EQUIHASH: comboBoxAlgo.setModel(new DefaultComboBoxModel(new String[]{"a1", "a2", "a3"})); break;
+            default: comboBoxAlgo.setEnabled(false);
         }
     }
 

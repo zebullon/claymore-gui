@@ -57,7 +57,7 @@ public class FileProxy {
 				return null;
 			}
 
-			newConfig = new Configuration(currencyName);
+			newConfig = Configuration.getNewConfig(currencyName);
 
 			while (configReader.ready()) {
 				String line = configReader.readLine();
