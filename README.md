@@ -20,11 +20,11 @@ Simple GUI for Claymore miners.
 - <b>Currency:</b> Select mining currency
   - <b>!!! NOTE:</b> if your preferred currency doesn't exist in list, you may just add it to file "resources/ALGORYTHM/currencies.txt"
 - <b>Algorythm:</b> Optimization algorythm. It corresponds to parameter -a in CryptoNight and Equihash Claymore miners. 
-- <b>ASM:</b> Enable or disable ASM mode at Ethash and Equihash Claymore miners. 
+- <b>ASM:</b> Enable or disable ASM mode in Ethash and Equihash Claymore miners. 
 - <b>Wallet:</b> Wallet address for mining
 - <b>Password (e-mail):</b> Password for mining pool
-- <b>Mining intencity:</b>: Parameter corresponds -ethi parameter at Ethash miner or -i parameter at Equihash miner.
-- <b>Hash count:</b> Parameter corresponds -h parameter at CryptoNight miner.
+- <b>Mining intencity:</b> Parameter corresponds -ethi parameter in Ethash miner or -i parameter at Equihash miner.
+- <b>Hash count:</b> Parameter corresponds -h parameter in CryptoNight miner.
 - <b>Pools:</b> list of pools for mining. Should be written by comma, like: "stratum+tcp://monero.crypto-pool.fr:3333, stratum+tcp://xmr.dwarfpool.com:80"
 The first pool sets as main.
 - <b>Enabled cards:</b> Parameter corresponds -di parameter in all Claymore miners. Set this field empty, if all cards should mine this currency
