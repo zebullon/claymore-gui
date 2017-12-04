@@ -18,7 +18,7 @@ Simple GUI for Claymore miners.
 
 - <b>Mining:</b> Select mining algorythm
 - <b>Currency:</b> Select mining currency
-  - <b>!!! NOTE:</b> if your preferred currency doesn't exist in list, you may just add it to file "resources/<Algorythm>/currencies.txt"
+  - <b>!!! NOTE:</b> if your preferred currency doesn't exist in list, you may just add it to file "resources/ALGORYTHM/currencies.txt"
 - <b>Algorythm:</b> Optimization algorythm. It corresponds to parameter -a in CryptoNight and Equihash Claymore miners. 
 - <b>ASM:</b> Enable or disable ASM mode at Ethash and Equihash Claymore miners. 
 - <b>Wallet:</b> Wallet address for mining
@@ -34,12 +34,12 @@ or set number sequence as "012", if you want to mine this currency by GPU#0, GPU
 - <b>No fee</b> Parameter corresponds -nofee parameter in all Claymore miners. Enable or disable no fee mode.
 - <b>Save</b> Save configuration for this currency with current parameters. 
 Parameters will be automatically loaded to corresponding fields at next time choosing this currency.
-- <b>Run</b> Save configuration for this currency with current parameters and run corresponding Claymore miner from "resources/<Algorythm>/Claymore" directory. 
+- <b>Run</b> Save configuration for this currency with current parameters and run corresponding Claymore miner from "resources/ALGORYTHM/Claymore" directory. 
 Parameters will be automatically loaded to corresponding fields at next time choosing this currency.
   - <b>!!! NOTE:</b> If you want to add some other parameters to configuration, do not edit config.txt and epools.txt in "resources/<Algorythm>/Claymore directory". 
-  They will be overridden at the next run by stored config file. Edit file "resources/configs/<CURRENCY_NAME>_config.txt".
+  They will be overridden at the next run by stored config file. Edit file "resources/configs/CURRENCY_NAME_config.txt".
   
-You may set link of "resources/<Algorythm>/Claymore/start.bat" file to Windows Startup directory to autorun miner with last runned configurationafter Windows reboot.
+You may set link of "resources/ALGORYTHM/Claymore/start.bat" file to Windows Startup directory to autorun miner with last runned configurationafter Windows reboot.
 This feature will be added to GUI later.
   
-You may read more about Claymore parameters in file "resources/<Algorythm>/Claymore/Readme.txt"
+You may read more about Claymore parameters in file "resources/ALGORYTHM/Claymore/Readme.txt"
