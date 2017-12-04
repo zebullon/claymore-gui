@@ -1,22 +1,24 @@
 package config;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Map.Entry;
 import java.util.ArrayList;
 
 public class FileProxy {
 	
-	private static final File resourcesDir, configDir, poolDir, currenciesDir;
+	private static final File resourcesDir, configDir, poolDir;
 	private static final File cryptoNightDir, ethashDir, equihashDir;
 	private static final String config = "config.txt";
 	private static final String epools = "epools.txt";
 	private static final String currencies = "currencies.txt";
 	private static final String lastCurrency = "lastCurrency.txt";
 	private static final String claymore = "Claymore";
-	
+
 	static {
 		resourcesDir = getFilePath(String.format("%s/resources", System.getProperty("user.dir")));
-		currenciesDir = getFilePath(String.format("%s/currencies", resourcesDir.getAbsolutePath()));
 		configDir = getFilePath(String.format("%s/configs", resourcesDir.getAbsolutePath()));
 		cryptoNightDir = getFilePath(String.format("%s/CryptoNight", resourcesDir.getAbsolutePath()));
 		ethashDir = getFilePath(String.format("%s/Ethash", resourcesDir.getAbsolutePath()));
@@ -55,7 +57,7 @@ public class FileProxy {
 				return null;
 			}
 
-			newConfig = new Configuration(currencyName);
+			newConfig = Configuration.getNewConfig(currencyName);
 
 			while (configReader.ready()) {
 				String line = configReader.readLine();
@@ -78,8 +80,7 @@ public class FileProxy {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (RuntimeException e){ }
-		finally {
+		} finally {
             closeReader(configReader);
             closeReader(epoolsReader);
 		}
@@ -95,8 +96,10 @@ public class FileProxy {
         	epoolsWriter = getWriter(String.format("%s/%s_%s", poolDir.getAbsolutePath(), conf.getCurrencyName(), epools));
     		
     		for (Entry<String, String> entry : conf.getOptions().entrySet()){
-				configWriter.write(String.format("%s %s", entry.getKey(), entry.getValue()));
-				configWriter.newLine();
+    			if (entry.getKey() != null) {
+					configWriter.write(String.format("%s %s", entry.getKey(), entry.getValue()));
+					configWriter.newLine();
+				}
 			}
     		    		
     		for (String pool : conf.getPools()){
@@ -148,7 +151,6 @@ public class FileProxy {
 	    	return new BufferedReader(isr);
 		} catch (FileNotFoundException e) {
 			return null;
-			//throw new RuntimeException(e);
 		}
     }
     
@@ -161,35 +163,22 @@ public class FileProxy {
 			OutputStreamWriter osw = new OutputStreamWriter(output);
 			return new BufferedWriter(osw);
 		} catch (IOException e) {
-			return null;
+			throw new RuntimeException(e);
 		}
     }
 
     public static void prepareConfigFiles(String currencyName){
-    	String configPath = String.format("%s/%s/%s", getCurrencyPath(Environment.getCurrentAlgorythm()), claymore, config);
-    	String epoolsPath = String.format("%s/%s/%s", getCurrencyPath(Environment.getCurrentAlgorythm()), claymore, epools);
+    	Path sourceConfigPath = new File(getConfigFileName(currencyName)).toPath();
+		Path sourceEpoolsPath = new File(getEpoolsFileName(currencyName)).toPath();
 
-		BufferedReader reader = getReader(getConfigFileName(currencyName));
-		BufferedWriter writer = getWriter(getFilePath(configPath).toString());
-		copyLineByLine(reader, writer);
+    	Path targetConfigPath = new File(String.format("%s/%s/%s", getCurrencyPath(Environment.getCurrentAlgorythm()), claymore, config)).toPath();
+    	Path targetEpoolsPath = new File(String.format("%s/%s/%s", getCurrencyPath(Environment.getCurrentAlgorythm()), claymore, epools)).toPath();
 
-		reader = getReader(getEpoolsFileName(currencyName));
-		writer = getWriter(getFilePath(epoolsPath).toString());
-		copyLineByLine(reader, writer);
-	}
-
-	private static void copyLineByLine(BufferedReader reader, BufferedWriter writer){
     	try {
-			while (reader.ready()) {
-				String line = reader.readLine();
-				writer.write(line);
-				writer.newLine();
-			}
+			Files.copy(sourceConfigPath, targetConfigPath, StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceEpoolsPath, targetEpoolsPath, StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e){
-			throw new RuntimeException(e);
-		} finally {
-			closeReader(reader);
-			closeWriter(writer);
+    		throw new RuntimeException(e);
 		}
 	}
     
@@ -242,7 +231,7 @@ public class FileProxy {
 	}
 
 	public static String loadLastCurrency(Algorythm algorythm){
-		BufferedReader reader = getReader(String.format("%s/%s", getMinerPath(algorythm), lastCurrency));
+		BufferedReader reader = getReader(String.format("%s/%s", getCurrencyPath(algorythm), lastCurrency));
 		String result = null;
 
 		try {
@@ -254,4 +243,36 @@ public class FileProxy {
 		}
 		return result;
 	}
+
+	public static void logError(Exception ex){
+		PrintWriter errLogWriter = null;
+		try {
+			errLogWriter = new PrintWriter(String.format("%s/%s", System.getProperty("user.dir"), "logError.txt"));
+			errLogWriter.println(ex.getMessage());
+			ex.printStackTrace(errLogWriter);
+		} catch (IOException e){
+			System.console().writer().println(e.getMessage());
+		} finally {
+			errLogWriter.close();
+		}
+	}
+
+//	public static void setStartToAutoLoad(boolean start){
+//		Path link = new File(getStartupFolder()).toPath();
+//		Path existing = new File(String.format("%s/%s", getMinerPath(Environment.getCurrentAlgorythm()).toString(), "start.lnk")).toPath();
+//		java.util.Set<PosixFilePermission> permissions = new HashSet<>();
+//		permissions.add(PosixFilePermission.OTHERS_WRITE);
+//
+//
+//		try {
+//			Files.setPosixFilePermissions(link, permissions);
+//			Files.copy(existing, link, StandardCopyOption.REPLACE_EXISTING);
+//		} catch (IOException e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
+//
+//	private static String getStartupFolder() {
+//		return System.getProperty("java.io.tmpdir").replace("Local\\Temp\\", "Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup");
+//	}
 }

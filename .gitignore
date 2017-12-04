@@ -65,3 +65,50 @@ out/artifacts/ClaymoreRunner.rar
 out/artifacts/ClaymoreRunner/resources/configs/XMR_config.txt
 out/artifacts/ClaymoreRunner/resources/pools/KRB_epools.txt
 out/artifacts/ClaymoreRunner/resources/pools/XMR_epools.txt
+resources/Ethash/lastCurrency.txt
+resources/pools/EXP_epools.txt
+resources/Ethash/Claymore/Remote manager/readme.txt
+resources/Ethash/Claymore/Remote manager/API.txt
+resources/Ethash/Claymore/Readme!!!.txt
+resources/Ethash/Claymore/License.txt
+resources/Ethash/Claymore/History.txt
+resources/Ethash/Claymore/epools.txt
+resources/Ethash/Claymore/dpools_sia.txt
+resources/Ethash/Claymore/dpools.txt
+resources/Ethash/Claymore/config.txt
+resources/configs/EXP_config.txt
+out/artifacts/ClaymoreRunner/resources/configs/EXP_config.txt
+out/artifacts/ClaymoreRunner/resources/configs/ZEC_config.txt
+out/artifacts/ClaymoreRunner/resources/CryptoNight/Claymore/start.lnk
+out/artifacts/ClaymoreRunner/resources/Equihash/Claymore/config.txt
+out/artifacts/ClaymoreRunner/resources/Equihash/Claymore/epools.txt
+out/artifacts/ClaymoreRunner/resources/Equihash/Claymore/History.txt
+out/artifacts/ClaymoreRunner/resources/Equihash/Claymore/License.txt
+out/artifacts/ClaymoreRunner/resources/Equihash/Claymore/Readme!!!.txt
+out/artifacts/ClaymoreRunner/resources/Equihash/Claymore/Remote manager/API.txt
+out/artifacts/ClaymoreRunner/resources/Equihash/Claymore/Remote manager/readme.txt
+out/artifacts/ClaymoreRunner/resources/Equihash/lastCurrency.txt
+out/artifacts/ClaymoreRunner/resources/Ethash/Claymore/config.txt
+out/artifacts/ClaymoreRunner/resources/Ethash/Claymore/dpools.txt
+out/artifacts/ClaymoreRunner/resources/Ethash/Claymore/dpools_sia.txt
+out/artifacts/ClaymoreRunner/resources/Ethash/Claymore/epools.txt
+out/artifacts/ClaymoreRunner/resources/Ethash/Claymore/History.txt
+out/artifacts/ClaymoreRunner/resources/Ethash/Claymore/License.txt
+out/artifacts/ClaymoreRunner/resources/Ethash/Claymore/Readme!!!.txt
+out/artifacts/ClaymoreRunner/resources/Ethash/Claymore/Remote manager/API.txt
+out/artifacts/ClaymoreRunner/resources/Ethash/Claymore/Remote manager/readme.txt
+out/artifacts/ClaymoreRunner/resources/Ethash/lastCurrency.txt
+out/artifacts/ClaymoreRunner/resources/pools/EXP_epools.txt
+out/artifacts/ClaymoreRunner/resources/pools/ZEC_epools.txt
+resources/configs/ZEC_config.txt
+resources/Equihash/Claymore/config.txt
+resources/Equihash/Claymore/epools.txt
+resources/Equihash/Claymore/History.txt
+resources/Equihash/Claymore/License.txt
+resources/Equihash/Claymore/Readme!!!.txt
+resources/Equihash/Claymore/Remote manager/API.txt
+resources/Equihash/Claymore/Remote manager/readme.txt
+resources/Equihash/lastCurrency.txt
+resources/pools/ZEC_epools.txt
+logError.txt
+resources/Equihash/currencies.txt
