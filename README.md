@@ -37,7 +37,7 @@ or set number sequence as "012", if you want to mine this currency by GPU#0, GPU
 Parameters will be automatically loaded to corresponding fields at next time choosing this currency.
 - <b>Run Button</b> Save configuration for this currency with current parameters and run corresponding Claymore miner from "resources/ALGORYTHM/Claymore" directory. 
 Parameters will be automatically loaded to corresponding fields at next time choosing this currency.
-  - <b>!!! NOTE:</b> If you want to add some other parameters to configuration, do not edit config.txt and epools.txt in "resources/<Algorythm>/Claymore directory". 
+  - <b>!!! NOTE:</b> If you want to add some other parameters to configuration, do not edit config.txt and epools.txt in "resources/Algorythm/Claymore directory". 
   They will be overridden at the next run by stored config file. Edit file "resources/configs/CURRENCY_config.txt".
   
 You may set link of "resources/ALGORYTHM/Claymore/start.bat" file to Windows Startup directory for autorun miner with last runned configuration after Windows reboot.
