@@ -11,6 +11,7 @@ Simple GUI for Claymore's miners.
 
 - Easy editing config.txt and epools.txt files
 - Support storing multiple configurations for different currencies
+- Fast loading prepared configuration
 - Turning between currencies in one click
 
 
