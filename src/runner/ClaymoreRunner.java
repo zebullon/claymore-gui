@@ -28,8 +28,8 @@ public class ClaymoreRunner {
 		try {
 			if (claymoreProcess == null) {
 				FileProxy.prepareConfigFiles(currencyName);
-					command = String.format("cmd /c start start.bat");
-					claymoreProcess = Runtime.getRuntime().exec(command, null, minerPath);
+				command = String.format("cmd /c start start.bat");
+				claymoreProcess = Runtime.getRuntime().exec(command, null, minerPath);
 			} else {
 				command = "taskkill /F /IM NsGpuCNMiner.exe";
 				Runtime.getRuntime().exec(command, null, minerPath);
