@@ -209,7 +209,7 @@ public abstract class Configuration {
 	// POOLS
 	
 	public Configuration addPool(String poolAddrs){
-		String[] poolAddresses = poolAddrs.trim().split(",");
+		String[] poolAddresses = poolAddrs.replaceAll(" ", "").split(",");
 		for (String poolAddr : poolAddresses) {
 			this.pools.add(poolAddr);
 		}
