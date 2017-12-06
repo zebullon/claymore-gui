@@ -39,7 +39,9 @@ Parameters will be automatically loaded to corresponding fields at next time cho
 Parameters will be automatically loaded to corresponding fields at next time choosing this currency.
   - <b>!!! NOTE:</b> If you want to add some other parameters to configuration, do not edit config.txt and epools.txt in "resources/ALGORYTHM/Claymore directory". 
   They will be ovewritten at the next run by stored config file. Edit file "resources/configs/CURRENCY_config.txt".
-  
+
+-allpools and -alcoins options are enabled for all miners by default
+
 You may set link of "resources/ALGORYTHM/Claymore/start.bat" file to Windows Startup directory for autorun miner with last runned configuration after Windows reboot.
 This feature will be added to GUI later.
   
