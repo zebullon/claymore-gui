@@ -74,7 +74,7 @@ public class FileProxy {
 					String[] pool = line.split(",");
 					pool = pool[0].split("\\s+");
 					if (pool[1].startsWith("stratum+tcp://")) {
-						newConfig.addPool(pool[1]);
+						newConfig.getPools().add(pool[1]);
 					}
 				}
 			}

@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * Created by zebullon on 23.11.17.
@@ -25,7 +26,7 @@ public class Frame extends JFrame {
     private JTextField textPassword = new JTextField("x");
     private JTextField textMiningIntencity = new JTextField();
     private JTextField textHashCnt = new JTextField("1024", 4);
-    private JTextField textPool = new JTextField("", 20);
+    private JComboBox comboBoxPool = new JComboBox();
     private JComboBox comboBoxAlgo = new JComboBox();
     private JCheckBox checkBoxAsmMode = new JCheckBox();
     private JComboBox comboBoxCurrency = new JComboBox();
@@ -47,7 +48,7 @@ public class Frame extends JFrame {
             new JLabel("Password (e-mail):"), textPassword,
             new JLabel("Mining intensity:"), textMiningIntencity,
             new JLabel("Hash count:"), textHashCnt,
-            new JLabel("Pools:"), textPool,
+            new JLabel("Pools:"), comboBoxPool,
             new JLabel("Enabled cards:"), textEnabledCards,
             new JLabel("Restart in:"), textRestartIn,
             new JLabel("Low intensity mode:"), checkBoxLowIntensity,
@@ -82,6 +83,7 @@ public class Frame extends JFrame {
     public Frame(){
         super("Claymore Runner");
         this.setBounds(100,100,640,440);
+        this.setBounds(100,100,640,440);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -97,6 +99,7 @@ public class Frame extends JFrame {
         initCurrencies();
         initButtonSave();
         initButtonRun();
+        comboBoxPool.setEditable(true);
 
         this.mainPanel.setLayout(null);
         addComponentsToContainer(mainPanel, mainPanelComponents);
@@ -132,13 +135,19 @@ public class Frame extends JFrame {
 
     private void saveConfig(){
         String currency = comboBoxCurrency.getSelectedItem().toString();
+        ArrayList<String> pools = new ArrayList<String>();
+
+        for (int i = 0; i < comboBoxPool.getItemCount(); i++){
+            pools.add(comboBoxPool.getItemAt(i).toString());
+        }
+
         Configuration config = Configuration.getNewConfig(currency)
                 .algorithm(String.valueOf(comboBoxAlgo.getSelectedIndex() + 1))
                 .walletAddr(textWallet.getText())
                 .password(textPassword.getText())
                 .intensity(textMiningIntencity.getText())
                 .asmMode(checkBoxAsmMode.isSelected())
-                .addPool(textPool.getText())
+                .addPools(pools)
                 .enabledCards(textEnabledCards.getText())
                 .restartIn(textRestartIn.getText())
                 .lowIntesity(checkBoxLowIntensity.isSelected())
@@ -175,7 +184,10 @@ public class Frame extends JFrame {
         for (JComponent component : components){
             setComponentSize(component, x, y);
             container.add(component);
-            y = x == 10 ? y : y + ELEMENT_HEIGHT + 5;
+            if ( !(component instanceof  JButton)) {
+                y = x == 10 ? y : y + ELEMENT_HEIGHT + 5;
+            }
+
             x = x == 10 ? x + LABEL_WIDTH + 10 : 10;
         }
     }
@@ -187,7 +199,11 @@ public class Frame extends JFrame {
         }
 
         if (component instanceof JComboBox){
-            component.setBounds(x, y, COMBO_WIDTH, ELEMENT_HEIGHT);
+            if (component == comboBoxPool){
+                component.setBounds(x, y, TEXT_WIDTH * 2 / 3, ELEMENT_HEIGHT);
+            } else {
+                component.setBounds(x, y, COMBO_WIDTH, ELEMENT_HEIGHT);
+            }
         }
 
         if (component instanceof JCheckBox){
@@ -195,7 +211,7 @@ public class Frame extends JFrame {
         }
 
         if (component instanceof JTextField){
-            if (component == textWallet || component == textPassword || component == textPool){
+            if (component == textWallet || component == textPassword){
                 component.setBounds(x, y, TEXT_WIDTH, ELEMENT_HEIGHT);
             } else {
                 component.setBounds(x, y, SHORT_TEXT_WIDTH, ELEMENT_HEIGHT);
@@ -267,7 +283,7 @@ public class Frame extends JFrame {
             this.textMiningIntencity.setText(config.getIntensity());
             this.checkBoxAsmMode.setSelected(config.isAsmMode());
             this.textHashCnt.setText(config.getHashCnt());
-            this.textPool.setText(loadPools(config));
+            this.comboBoxPool.setModel(new DefaultComboBoxModel(loadPools(config)));
             this.comboBoxAlgo.setSelectedIndex(Integer.parseInt(config.getAlgo()) - 1 );
             if (config.getEnabledCards() != null) {
                 this.textEnabledCards.setText(config.getEnabledCards());
@@ -293,7 +309,7 @@ public class Frame extends JFrame {
             this.textMiningIntencity.setText("");
             this.checkBoxAsmMode.setSelected(Environment.getCurrentAlgorythm() != Algorythm.CRYPTONIGHT);
             this.textHashCnt.setText("1024");
-            this.textPool.setText("");
+            this.comboBoxPool.setModel(new DefaultComboBoxModel());
             this.comboBoxAlgo.setSelectedIndex(0);
             this.textEnabledCards.setText("ALL CARDS");
             this.textRestartIn.setText("1");
@@ -313,17 +329,9 @@ public class Frame extends JFrame {
         }
     }
 
-    private String loadPools(Configuration config){
-        StringBuilder builder = new StringBuilder();
-        int poolsCount = config.getPools().size();
-
-        for (int i = 0; i < poolsCount; i++){
-            builder.append(config.getPools().get(i));
-            if (i < poolsCount - 1){
-                builder.append(", ");
-            }
-        }
-        return builder.toString();
+    private String[] loadPools(Configuration config){
+        ArrayList<String> pools = config.getPools();
+        return pools.toArray(new String[pools.size()]);
     }
 
     private void saveLastCurrency(){

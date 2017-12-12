@@ -1,6 +1,7 @@
 package config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -263,11 +264,8 @@ public abstract class Configuration {
 	
 	// POOLS
 	
-	public Configuration addPool(String poolAddrs){
-		String[] poolAddresses = poolAddrs.replaceAll(" ", "").split(",");
-		for (String poolAddr : poolAddresses) {
-			this.pools.add(poolAddr);
-		}
+	public Configuration addPools(ArrayList<String> pools){
+		this.pools.addAll(pools);
 		return this;
 	}
 	
