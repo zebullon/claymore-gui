@@ -9,15 +9,18 @@ public abstract class Configuration {
 	private static final String ALL_COINS = "-allcoins";
 	private static final String ASM_MODE = "-asm";
 	private static final String CORE_CLOCK = "-cclock";
+	private static final String CORE_VOLTAGE = "-cvddc";
 	private static final String DEBUG = "-dbg";
 	private static final String ENABLED_CARDS = "-di";
 	private static final String FAN_MAX = "-fanmax";
 	private static final String FAN_MIN = "-fanmin";
 	private static final String LOW_INT = "-li";
 	private static final String MEM_CLOCK = "-mclock";
+	private static final String MEM_VOLTAGE = "-mvddc";
 	private static final String NO_FEE = "-nofee";
 	private static final String POW_LIM = "-powlim";
 	private static final String RESTART = "-r";
+	private static final String STOP_TEMP = "-tstop";
 	private static final String TARGET_TEMP = "-tt";
 	private static final String WATCH_DOG = "-wd";
 
@@ -175,9 +178,14 @@ public abstract class Configuration {
 	}
 
 	//Boost
-	
+	//Setters
 	public Configuration targetTemp(String temperature){
 		this.options.put(TARGET_TEMP, temperature);
+		return this;
+	}
+
+	public Configuration stopTemp(String temperature){
+		this.options.put(STOP_TEMP, temperature);
 		return this;
 	}
 	
@@ -200,10 +208,57 @@ public abstract class Configuration {
 		this.options.put(MEM_CLOCK, mClock);
 		return this;
 	}
+
+	public Configuration cVoltage(String cVoltage){
+		this.options.put(CORE_VOLTAGE, cVoltage);
+		return this;
+	}
+
+	public Configuration mVoltage(String mVoltage){
+		this.options.put(MEM_VOLTAGE, mVoltage);
+		return this;
+	}
 	
 	public Configuration powLim(String powLim){
 		this.options.put(POW_LIM, powLim);
 		return this;
+	}
+
+	// Getters
+	public String targetTemp(){
+		return this.options.get(TARGET_TEMP);
+	}
+
+	public String stopTemp(){
+		return this.options.get(STOP_TEMP);
+	}
+
+	public String fanMin(){
+		return this.options.get(FAN_MIN);
+	}
+
+	public String fanMax(){
+		return this.options.get(FAN_MAX);
+	}
+
+	public String cClock(){
+		return this.options.get(CORE_CLOCK);
+	}
+
+	public String mClock(){
+		return this.options.get(MEM_CLOCK);
+	}
+
+	public String cVoltage(){
+		return this.options.get(CORE_VOLTAGE);
+	}
+
+	public String mVoltage(){
+		return this.options.get(MEM_VOLTAGE);
+	}
+
+	public String powLim(){
+		return this.options.get(POW_LIM);
 	}
 	
 	// POOLS
