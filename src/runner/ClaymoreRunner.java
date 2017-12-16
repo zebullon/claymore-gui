@@ -15,6 +15,7 @@ public class ClaymoreRunner {
 			Frame main = new Frame();
 			main.setVisible(true);
 		} catch (Exception e){
+			e.printStackTrace();
 			FileProxy.logError(e);
 		}
 	}

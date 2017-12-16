@@ -1,15 +1,13 @@
 package runner;
 
-import config.Algorythm;
-import config.Configuration;
-import config.Environment;
-import config.FileProxy;
+import config.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by zebullon on 23.11.17.
@@ -23,10 +21,13 @@ public class Frame extends JFrame {
     // Main panel components
 
     private JTextField textWallet = new JTextField();
+    private JTextField textPaymentId = new JTextField();
     private JTextField textPassword = new JTextField("x");
     private JTextField textMiningIntencity = new JTextField();
     private JTextField textHashCnt = new JTextField("1024", 4);
     private JComboBox comboBoxPool = new JComboBox();
+    private JTextField textWorker = new JTextField();
+    private JTextField textPoolFormat = new JTextField();
     private JComboBox comboBoxAlgo = new JComboBox();
     private JCheckBox checkBoxAsmMode = new JCheckBox();
     private JComboBox comboBoxCurrency = new JComboBox();
@@ -38,6 +39,9 @@ public class Frame extends JFrame {
     private JCheckBox checkBoxLowIntensity = new JCheckBox();
     private JButton buttonSave = new JButton("Save");
     private JButton buttonRun = new JButton("Run");
+    private JButton buttonSavePool = new JButton("Save pool");
+    private JButton buttonRemovePool = new JButton("Delete pool");
+
 
     private final JComponent[] mainPanelComponents = new JComponent[]{
             new JLabel("Mining:"), comboBoxAlgorythm,
@@ -45,15 +49,18 @@ public class Frame extends JFrame {
             new JLabel("Algorythm:"), comboBoxAlgo,
             new JLabel("ASM mode:"), checkBoxAsmMode,
             new JLabel("Wallet:"), textWallet,
+            new JLabel("Payment ID:"), textPaymentId,
             new JLabel("Password (e-mail):"), textPassword,
             new JLabel("Mining intensity:"), textMiningIntencity,
             new JLabel("Hash count:"), textHashCnt,
             new JLabel("Pools:"), comboBoxPool,
+            new JLabel("Worker:"), textWorker,
+            new JLabel("Wallet format:"), textPoolFormat,
             new JLabel("Enabled cards:"), textEnabledCards,
             new JLabel("Restart in:"), textRestartIn,
             new JLabel("Low intensity mode:"), checkBoxLowIntensity,
             new JLabel("No fee:"), checkBoxNoFee,
-            buttonSave, buttonRun
+            buttonSave, buttonRun, buttonSavePool, buttonRemovePool
     };
 
     // Overclock panel components
@@ -80,10 +87,21 @@ public class Frame extends JFrame {
         new JLabel("Stop temperature:"), textStopTemp,
     };
 
+    // Pool panel components
+
+    private JComboBox comboBoxPoolAddr = new JComboBox();
+    //private JTextField textPoolWallet = new JTextField();
+
+    private JTextField textEmail = new JTextField();
+
+    private final JComponent[] poolPaneComponents = new JComponent[]{
+        new JLabel("PaymentID:"), textPaymentId,
+
+    };
+
     public Frame(){
         super("Claymore Runner");
-        this.setBounds(100,100,640,440);
-        this.setBounds(100,100,640,440);
+        this.setBounds(100,100,640,this.mainPanelComponents.length*15);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -97,9 +115,11 @@ public class Frame extends JFrame {
         initAlgorythm();
         lockForbiddenFields();
         initCurrencies();
+        initComboBoxPool();
         initButtonSave();
         initButtonRun();
-        comboBoxPool.setEditable(true);
+        initButtonSavePool();
+        initButtonRemovePool();
 
         this.mainPanel.setLayout(null);
         addComponentsToContainer(mainPanel, mainPanelComponents);
@@ -113,7 +133,6 @@ public class Frame extends JFrame {
     }
 
     private void initButtonSave(){
-        buttonSave.setBounds(10, 600, BUTTON_WIDTH, ELEMENT_HEIGHT);
         buttonSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -133,12 +152,97 @@ public class Frame extends JFrame {
         });
     }
 
-    private void saveConfig(){
+    private void initButtonSavePool(){
+        buttonSavePool.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                savePool();
+            }
+        });
+    }
+
+    private void savePool(){
         String currency = comboBoxCurrency.getSelectedItem().toString();
-        ArrayList<String> pools = new ArrayList<String>();
+        int index = comboBoxPool.getSelectedIndex();
+
+        if (index < 0){
+            Pool newPool = new Pool();
+            setPoolParams(newPool);
+            Environment.getPools(currency).add(newPool);
+        } else {
+            setPoolParams(Environment.getPools(currency).get(index));
+        }
+        comboBoxPool.setModel(new DefaultComboBoxModel(loadPoolAddrs(currency).toArray()));
+        comboBoxPool.setSelectedIndex(index >= 0 ? index : comboBoxPool.getItemCount() - 2);
+    }
+
+    private void initButtonRemovePool(){
+        buttonRemovePool.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removePool();
+            }
+        });
+    }
+
+    private void removePool(){
+        String currency = comboBoxCurrency.getSelectedItem().toString();
+        int index = comboBoxPool.getSelectedIndex();
+
+        if (index >= 0){
+            Environment.getPools(currency).remove(index);
+            comboBoxPool.setModel(new DefaultComboBoxModel(loadPoolAddrs(currency).toArray()));
+        }
+    }
+
+    private void setPoolParams(Pool pool){
+        pool.poolAddress(comboBoxPool.getSelectedItem().toString())
+                .wallet(textWallet.getText())
+                .paymentId(textPaymentId.getText())
+                .password(textPassword.getText())
+                .email(textPassword.getText())
+                .worker(textWorker.getText())
+                .format(textPoolFormat.getText());
+    }
+
+    private void initComboBoxPool(){
+        comboBoxPool.setEditable(true);
+
+        comboBoxPool.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int index = comboBoxPool.getSelectedIndex();
+                Pool currentPool = index >= 0 && index < Environment.getPools(comboBoxCurrency.getSelectedItem().toString()).size()
+                        ? Environment.getPools(comboBoxCurrency.getSelectedItem().toString()).get(index)
+                        : null;
+                if (currentPool != null) {
+                    textWallet.setText(currentPool.getWallet());
+                    textPaymentId.setText(currentPool.getPaymentId());
+                    textPassword.setText(currentPool.getEmail().isEmpty() ? currentPool.getPassword() : currentPool.getEmail());
+                    textWorker.setText(currentPool.getWorker());
+                    textPoolFormat.setText(currentPool.getFormat());
+                }
+            }
+        });
+    }
+
+    private void saveConfig(){
+        savePool();
+        String currency = comboBoxCurrency.getSelectedItem().toString();
+        List<Pool> pools = Environment.getPools(currency);
 
         for (int i = 0; i < comboBoxPool.getItemCount(); i++){
-            pools.add(comboBoxPool.getItemAt(i).toString());
+            String poolAddress = comboBoxPool.getItemAt(i).toString();
+            if (i >= pools.size()) {
+                if (!poolAddress.isEmpty()) {
+                    pools.add(new Pool(poolAddress).wallet(textWallet.getText())
+                                                   .paymentId(textPaymentId.getText())
+                                                   .password(textPassword.getText())
+                                                   .email(textPassword.getText())
+                                                   .worker(textWorker.getText())
+                                                   .format(textPoolFormat.getText()));
+                }
+            }
         }
 
         Configuration config = Configuration.getNewConfig(currency)
@@ -147,7 +251,7 @@ public class Frame extends JFrame {
                 .password(textPassword.getText())
                 .intensity(textMiningIntencity.getText())
                 .asmMode(checkBoxAsmMode.isSelected())
-                .addPools(pools)
+                //.addPools(pools)
                 .enabledCards(textEnabledCards.getText())
                 .restartIn(textRestartIn.getText())
                 .lowIntesity(checkBoxLowIntensity.isSelected())
@@ -171,13 +275,6 @@ public class Frame extends JFrame {
         saveLastCurrency();
     }
 
-    private final int ELEMENT_HEIGHT = 20;
-    private final int BUTTON_WIDTH = 120;
-    private final int LABEL_WIDTH = 120;
-    private final int COMBO_WIDTH = 120;
-    private final int TEXT_WIDTH = 480;
-    private final int SHORT_TEXT_WIDTH = 100;
-
     private void addComponentsToContainer(Container container, JComponent[] components){
         int x = 10, y = 10;
 
@@ -185,41 +282,45 @@ public class Frame extends JFrame {
             setComponentSize(component, x, y);
             container.add(component);
             if ( !(component instanceof  JButton)) {
-                y = x == 10 ? y : y + ELEMENT_HEIGHT + 5;
+                y = x == 10 ? y : y + FrameConstants.ELEMENT_HEIGHT + 5;
             }
 
-            x = x == 10 ? x + LABEL_WIDTH + 10 : 10;
+            if ( !(component instanceof  JButton)) {
+                x = x == 10 ? x + FrameConstants.LABEL_WIDTH + 10 : 10;
+            } else {
+                x += FrameConstants.LABEL_WIDTH + 10;
+            }
         }
     }
 
     private void setComponentSize(JComponent component, int x, int y){
         if (component instanceof JLabel){
-            component.setBounds(x, y, LABEL_WIDTH, ELEMENT_HEIGHT);
+            component.setBounds(x, y, FrameConstants.LABEL_WIDTH, FrameConstants.ELEMENT_HEIGHT);
             ((JLabel)component).setHorizontalAlignment(JLabel.RIGHT);
         }
 
         if (component instanceof JComboBox){
             if (component == comboBoxPool){
-                component.setBounds(x, y, TEXT_WIDTH * 2 / 3, ELEMENT_HEIGHT);
+                component.setBounds(x, y, FrameConstants.TEXT_WIDTH * 2 / 3, FrameConstants.ELEMENT_HEIGHT);
             } else {
-                component.setBounds(x, y, COMBO_WIDTH, ELEMENT_HEIGHT);
+                component.setBounds(x, y, FrameConstants.COMBO_WIDTH, FrameConstants.ELEMENT_HEIGHT);
             }
         }
 
         if (component instanceof JCheckBox){
-            component.setBounds(x, y, ELEMENT_HEIGHT, ELEMENT_HEIGHT);
+            component.setBounds(x, y, FrameConstants.ELEMENT_HEIGHT, FrameConstants.ELEMENT_HEIGHT);
         }
 
         if (component instanceof JTextField){
-            if (component == textWallet || component == textPassword){
-                component.setBounds(x, y, TEXT_WIDTH, ELEMENT_HEIGHT);
+            if (component == textWallet || component == textPaymentId || component == textPassword){
+                component.setBounds(x, y, FrameConstants.TEXT_WIDTH, FrameConstants.ELEMENT_HEIGHT);
             } else {
-                component.setBounds(x, y, SHORT_TEXT_WIDTH, ELEMENT_HEIGHT);
+                component.setBounds(x, y, FrameConstants.SHORT_TEXT_WIDTH, FrameConstants.ELEMENT_HEIGHT);
             }
         }
 
         if (component instanceof JButton){
-            component.setBounds(x, y, BUTTON_WIDTH, ELEMENT_HEIGHT*2);
+            component.setBounds(x, y, FrameConstants.BUTTON_WIDTH, FrameConstants.ELEMENT_HEIGHT*2);
         }
     }
 
@@ -277,13 +378,18 @@ public class Frame extends JFrame {
 
         initAlgo();
 
+        List<Pool> pools = Environment.getPools(selectedCurrency);
+        Pool mainPool = pools.size() == 0 ? new Pool() : pools.get(0);
+        this.textWallet.setText(mainPool.getWallet());
+        this.textPaymentId.setText(mainPool.getPaymentId());
+        this.textPassword.setText(mainPool.getPassword());
+        this.textPoolFormat.setText(mainPool.getFormat());
+
         if (config != null) {
-            this.textWallet.setText(config.getWallet());
-            this.textPassword.setText(config.getPassword());
             this.textMiningIntencity.setText(config.getIntensity());
             this.checkBoxAsmMode.setSelected(config.isAsmMode());
             this.textHashCnt.setText(config.getHashCnt());
-            this.comboBoxPool.setModel(new DefaultComboBoxModel(loadPools(config)));
+            this.comboBoxPool.setModel(new DefaultComboBoxModel(loadPoolAddrs(selectedCurrency).toArray()));
             this.comboBoxAlgo.setSelectedIndex(Integer.parseInt(config.getAlgo()) - 1 );
             if (config.getEnabledCards() != null) {
                 this.textEnabledCards.setText(config.getEnabledCards());
@@ -304,12 +410,10 @@ public class Frame extends JFrame {
             this.textFanMin.setText(config.fanMin());
             this.textFanMax.setText(config.fanMax());
         } else {
-            this.textWallet.setText("");
-            this.textPassword.setText("x");
             this.textMiningIntencity.setText("");
             this.checkBoxAsmMode.setSelected(Environment.getCurrentAlgorythm() != Algorythm.CRYPTONIGHT);
             this.textHashCnt.setText("1024");
-            this.comboBoxPool.setModel(new DefaultComboBoxModel());
+            this.comboBoxPool.setModel(new DefaultComboBoxModel(loadPoolAddrs(selectedCurrency).toArray()));
             this.comboBoxAlgo.setSelectedIndex(0);
             this.textEnabledCards.setText("ALL CARDS");
             this.textRestartIn.setText("1");
@@ -329,9 +433,13 @@ public class Frame extends JFrame {
         }
     }
 
-    private String[] loadPools(Configuration config){
-        ArrayList<String> pools = config.getPools();
-        return pools.toArray(new String[pools.size()]);
+    private List<String> loadPoolAddrs(String currency){
+        List<String> poolAddrs = Environment.getPools(currency)
+                                        .stream()
+                                        .map(pool -> pool.getPoolAddress())
+                                        .collect(Collectors.toList());
+        poolAddrs.add("");
+        return poolAddrs;
     }
 
     private void saveLastCurrency(){

@@ -1,7 +1,5 @@
 package config;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +30,6 @@ public abstract class Configuration {
 
 	private final String currencyName;
 	protected final Map<String, String> options;
-	private final ArrayList<String> pools;
 
 	public static Configuration getNewConfig(String currencyName){
 		switch (Environment.getCurrentAlgorythm()){
@@ -54,7 +51,6 @@ public abstract class Configuration {
 			}
 		};
 
-		this.pools = new ArrayList<String>();
 		setDefaultValues();
 
 		Environment.getCachedConfigs().put(currencyName, this);
@@ -71,11 +67,7 @@ public abstract class Configuration {
 	public String getCurrencyName(){
 		return this.currencyName;
 	}
-	
-	public ArrayList<String> getPools(){
-		return this.pools;
-	}
-	
+
 	public String getWallet(){
 		return this.options.get(getWalletKey());
 	}
@@ -105,8 +97,6 @@ public abstract class Configuration {
 	// OPTIONS
 	
 	protected void setDefaultValues(){
-		this.options.put(getPasswordKey(), "x");
-		this.options.put(getWalletKey(), "");
 		this.options.put(getAlgoKey(), "1");
 		this.options.put(DEBUG, "-1");
 		this.options.put(RESTART, "1");
@@ -261,13 +251,4 @@ public abstract class Configuration {
 	public String powLim(){
 		return this.options.get(POW_LIM);
 	}
-	
-	// POOLS
-	
-	public Configuration addPools(ArrayList<String> pools){
-		this.pools.addAll(pools);
-		return this;
-	}
-	
-
 }

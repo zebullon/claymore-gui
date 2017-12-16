@@ -70,12 +70,23 @@ public class FileProxy {
 
 			while (epoolsReader.ready()) {
 				String line = epoolsReader.readLine();
+				String format = "";
+				if (line.replace(" ", "").startsWith("#FORMAT:")){
+					format = line.split(":")[1].trim();
+					line = epoolsReader.readLine();
+				}
 				if (!line.startsWith("#")) {
-					String[] pool = line.split(",");
-					pool = pool[0].split("\\s+");
-					if (pool[1].startsWith("stratum+tcp://")) {
-						newConfig.getPools().add(pool[1]);
+					String[] poolParams = line.split(",");
+					Pool pool = new Pool();
+					for (String poolParam : poolParams) {
+						String[] keyValue = poolParam.replace(" ", "").split(":", 2);
+						switch (keyValue[0]){
+							case "POOL" : pool.poolAddress(keyValue[1].trim()); break;
+							case "WALLET" : parseWalletAddr(pool, keyValue[1].trim(), format); break;
+							case "PSW" : pool.password(keyValue[1].trim()); break;
+						}
 					}
+					Environment.addPool(currencyName, pool);
 				}
 			}
 		} catch (IOException e) {
@@ -86,6 +97,26 @@ public class FileProxy {
 		}
 
 		return newConfig;
+	}
+
+	private static void parseWalletAddr(Pool pool, String walletAddr, String format){
+		pool.format(format);
+
+		if (format.isEmpty() || format.equals("WALLET")) {
+			pool.wallet(walletAddr);
+		} else {
+			String[] formatParams = format.split("/|[.]");
+			String[] walletParams = walletAddr.split("/|[.]");
+
+			for (int i = 0; i < formatParams.length; i++){
+				switch (formatParams[i].toUpperCase()){
+					case "WALLET" : pool.wallet(walletParams[i]); break;
+					case "PAYMENT-ID" : pool.paymentId(walletParams[i]); break;
+					case "WORKER" : pool.worker(walletParams[i]); break;
+					case "EMAIL" : pool.email(walletParams[i]); break;
+				}
+			}
+		}
 	}
 	
     public static void writeConfigToFile(Configuration conf){
@@ -102,8 +133,25 @@ public class FileProxy {
 				}
 			}
     		    		
-    		for (String pool : conf.getPools()){
-    			epoolsWriter.write(String.format("POOL: %s", pool));
+    		for (Pool pool : Environment.getPools(conf.getCurrencyName())){
+    			if (! pool.getFormat().isEmpty()){
+    				epoolsWriter.write(String.format("# FORMAT: %s", pool.getFormat()));
+    				epoolsWriter.newLine();
+				}
+
+				String walletAddr = pool.getFormat().isEmpty() ? pool.getWallet()
+						                                       : pool.getFormat().toUpperCase().replace("WALLET", pool.getWallet())
+						                                                                       .replace("PAYMENT-ID", pool.getPaymentId())
+						                                                                       .replace("WORKER", pool.getWorker())
+						                                                                       .replace("EMAIL", pool.getEmail())
+						                                                                       .replace("..", ".");
+    			epoolsWriter.write(String.format("POOL: %s", pool.getPoolAddress()));
+    			if (! pool.getWallet().isEmpty()){
+    				epoolsWriter.write(String.format(", WALLET: %s", walletAddr));
+				}
+				if (! pool.getPassword().isEmpty()){
+					epoolsWriter.write(String.format(", PSW: %s", pool.getPassword()));
+				}
     			epoolsWriter.newLine();
     		}
 		} catch (FileNotFoundException e) {
