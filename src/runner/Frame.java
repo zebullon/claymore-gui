@@ -312,7 +312,7 @@ public class Frame extends JFrame {
         }
 
         if (component instanceof JTextField){
-            if (component == textWallet || component == textPaymentId || component == textPassword){
+            if (component == textWallet || component == textPaymentId || component == textPassword || component == textPoolFormat){
                 component.setBounds(x, y, FrameConstants.TEXT_WIDTH, FrameConstants.ELEMENT_HEIGHT);
             } else {
                 component.setBounds(x, y, FrameConstants.SHORT_TEXT_WIDTH, FrameConstants.ELEMENT_HEIGHT);
@@ -345,6 +345,7 @@ public class Frame extends JFrame {
         checkBoxAsmMode.setEnabled(! isCryptoNight);
         textHashCnt.setEnabled(isCryptoNight);
         textMiningIntencity.setEnabled(! isCryptoNight);
+        textPaymentId.setEnabled(isCryptoNight);
     }
 
     private void initCurrencies(){
@@ -380,7 +381,9 @@ public class Frame extends JFrame {
 
         List<Pool> pools = Environment.getPools(selectedCurrency);
         Pool mainPool = pools.size() == 0 ? new Pool() : pools.get(0);
-        this.textWallet.setText(mainPool.getWallet());
+        this.textWallet.setText(mainPool.getWallet().isEmpty() && config != null
+                ? config.getWallet()
+                : mainPool.getWallet());
         this.textPaymentId.setText(mainPool.getPaymentId());
         this.textPassword.setText(mainPool.getPassword());
         this.textPoolFormat.setText(mainPool.getFormat());
