@@ -387,6 +387,7 @@ public class Frame extends JFrame {
         this.textPaymentId.setText(mainPool.getPaymentId());
         this.textPassword.setText(mainPool.getPassword());
         this.textPoolFormat.setText(mainPool.getFormat());
+        this.textWorker.setText(mainPool.getWorker());
 
         if (config != null) {
             this.textMiningIntencity.setText(config.getIntensity());
