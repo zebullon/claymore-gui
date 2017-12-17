@@ -112,3 +112,7 @@ resources/Equihash/lastCurrency.txt
 resources/pools/ZEC_epools.txt
 logError.txt
 resources/Equihash/currencies.txt
+out/artifacts/ClaymoreRunner/resources/configs/MSR_config.txt
+out/artifacts/ClaymoreRunner/resources/pools/MSR_epools.txt
+resources/pools/XMR_epools.txt
+resources/configs/XMR_config.txt
