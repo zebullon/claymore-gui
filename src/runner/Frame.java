@@ -14,34 +14,34 @@ import java.util.stream.Collectors;
  */
 public class Frame extends JFrame {
 
-    private JTabbedPane tabbedPane = new JTabbedPane();
-    private JPanel mainPanel = new JPanel();
-    private JPanel overclockPanel = new JPanel();
+    private final JTabbedPane tabbedPane = new JTabbedPane();
+    private final JPanel mainPanel = new JPanel();
+    private final JPanel overclockPanel = new JPanel();
+    private final JPanel donatePanel = new JPanel();
 
     // Main panel components
 
-    private JTextField textWallet = new JTextField();
-    private JTextField textPaymentId = new JTextField();
-    private JTextField textPassword = new JTextField("x");
-    private JTextField textMiningIntencity = new JTextField();
-    private JTextField textHashCnt = new JTextField("1024", 4);
-    private JComboBox comboBoxPool = new JComboBox();
-    private JTextField textWorker = new JTextField();
-    private JTextField textPoolFormat = new JTextField();
-    private JComboBox comboBoxAlgo = new JComboBox();
-    private JCheckBox checkBoxAsmMode = new JCheckBox();
-    private JComboBox comboBoxCurrency = new JComboBox();
-    private JTextField textEnabledCards = new JTextField("ALL CARDS");
-    private JComboBox comboBoxAlgorythm = new JComboBox();
-    private JTextField textRestartIn = new JTextField("1");
-    private JCheckBox checkBoxNoFee = new JCheckBox();
-    private JCheckBox checkBoxStart = new JCheckBox();
-    private JCheckBox checkBoxLowIntensity = new JCheckBox();
-    private JButton buttonSave = new JButton("Save");
-    private JButton buttonRun = new JButton("Run");
-    private JButton buttonSavePool = new JButton("Save pool");
-    private JButton buttonRemovePool = new JButton("Delete pool");
-
+    private final JTextField textWallet = new JTextField();
+    private final JTextField textPaymentId = new JTextField();
+    private final JTextField textPassword = new JTextField("x");
+    private final JTextField textMiningIntencity = new JTextField();
+    private final JTextField textHashCnt = new JTextField("1024", 4);
+    private final JComboBox comboBoxPool = new JComboBox();
+    private final JTextField textWorker = new JTextField();
+    private final JTextField textPoolFormat = new JTextField();
+    private final JComboBox comboBoxAlgo = new JComboBox();
+    private final JCheckBox checkBoxAsmMode = new JCheckBox();
+    private final JComboBox comboBoxCurrency = new JComboBox();
+    private final JTextField textEnabledCards = new JTextField("ALL CARDS");
+    private final JComboBox comboBoxAlgorythm = new JComboBox();
+    private final JTextField textRestartIn = new JTextField("1");
+    private final JCheckBox checkBoxNoFee = new JCheckBox();
+    private final JCheckBox checkBoxStart = new JCheckBox();
+    private final JCheckBox checkBoxLowIntensity = new JCheckBox();
+    private final JButton buttonSave = new JButton("Save");
+    private final JButton buttonRun = new JButton("Run");
+    private final JButton buttonSavePool = new JButton("Save pool");
+    private final JButton buttonRemovePool = new JButton("Delete pool");
 
     private final JComponent[] mainPanelComponents = new JComponent[]{
             new JLabel("Mining:"), comboBoxAlgorythm,
@@ -65,15 +65,15 @@ public class Frame extends JFrame {
 
     // Overclock panel components
 
-    private JTextField textCoreClock = new JTextField();
-    private JTextField textMemoryClock = new JTextField();
-    private JTextField textCoreVoltage = new JTextField();
-    private JTextField textMemoryVoltage = new JTextField();
-    private JTextField textPowerLimit = new JTextField();
-    private JTextField textFanMin = new JTextField();
-    private JTextField textFanMax = new JTextField();
-    private JTextField textTargetTemp = new JTextField();
-    private JTextField textStopTemp = new JTextField();
+    private final JTextField textCoreClock = new JTextField();
+    private final JTextField textMemoryClock = new JTextField();
+    private final JTextField textCoreVoltage = new JTextField();
+    private final JTextField textMemoryVoltage = new JTextField();
+    private final JTextField textPowerLimit = new JTextField();
+    private final JTextField textFanMin = new JTextField();
+    private final JTextField textFanMax = new JTextField();
+    private final JTextField textTargetTemp = new JTextField();
+    private final JTextField textStopTemp = new JTextField();
 
     private final JComponent[] overclockPanelComponents = new JComponent[]{
         new JLabel("Core clock, MHz:"), textCoreClock,
@@ -84,24 +84,21 @@ public class Frame extends JFrame {
         new JLabel("Fan, min rpm:"), textFanMin,
         new JLabel("Fan, max rpm:"), textFanMax,
         new JLabel("Target temperature:"), textTargetTemp,
-        new JLabel("Stop temperature:"), textStopTemp,
+        new JLabel("Stop temperature:"), textStopTemp
     };
 
-    // Pool panel components
+    //Donate panel components
+    private final JTextField textDonateXmr = new JTextField("4JUdGzvrMFDWrUUwY3toJATSeNwjn54LkCnKBPRzDuhzi5vSepHfUckJNxRL2gjkNrSqtCoRUrEDAgRwsQvVCjZbRym6aAbhwn8DiomDGe");
+    private final JTextField textDonateEth = new JTextField("0x07599a0be04a356d3d5ab7a1eda8104ceab357f4");
 
-    private JComboBox comboBoxPoolAddr = new JComboBox();
-    //private JTextField textPoolWallet = new JTextField();
-
-    private JTextField textEmail = new JTextField();
-
-    private final JComponent[] poolPaneComponents = new JComponent[]{
-        new JLabel("PaymentID:"), textPaymentId,
-
+    private final JComponent[] donatePanelComponents = new JComponent[]{
+            new JLabel("Donate XMR:"), textDonateXmr,
+            new JLabel("Donate ETH:"), textDonateEth
     };
 
     public Frame(){
         super("Claymore Runner");
-        this.setBounds(100,100,640,this.mainPanelComponents.length*15);
+        this.setBounds(100,100,640,520);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -109,6 +106,7 @@ public class Frame extends JFrame {
 
         initMainPanel();
         initOverClockPanel();
+        initDonatePanel();
     }
 
     private void initMainPanel(){
@@ -130,6 +128,14 @@ public class Frame extends JFrame {
         this.overclockPanel.setLayout(null);
         addComponentsToContainer(overclockPanel, overclockPanelComponents);
         this.tabbedPane.addTab("Overclock", overclockPanel);
+    }
+
+    private void initDonatePanel(){
+        textDonateEth.setEditable(false);
+        textDonateXmr.setEditable(false);
+        this.donatePanel.setLayout(null);
+        addComponentsToContainer(donatePanel, donatePanelComponents);
+        this.tabbedPane.addTab("Donate", donatePanel);
     }
 
     private void initButtonSave(){
@@ -312,10 +318,11 @@ public class Frame extends JFrame {
         }
 
         if (component instanceof JTextField){
-            if (component == textWallet || component == textPaymentId || component == textPassword || component == textPoolFormat){
-                component.setBounds(x, y, FrameConstants.TEXT_WIDTH, FrameConstants.ELEMENT_HEIGHT);
-            } else {
+            if (component == textMiningIntencity || component == textHashCnt ||
+                component == textWorker || component == textRestartIn) {
                 component.setBounds(x, y, FrameConstants.SHORT_TEXT_WIDTH, FrameConstants.ELEMENT_HEIGHT);
+            } else {
+                component.setBounds(x, y, FrameConstants.TEXT_WIDTH, FrameConstants.ELEMENT_HEIGHT);
             }
         }
 
