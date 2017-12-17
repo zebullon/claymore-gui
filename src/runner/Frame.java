@@ -81,8 +81,8 @@ public class Frame extends JFrame {
         new JLabel("Core voltage, mV:"), textCoreVoltage,
         new JLabel("Memory voltage, mV:"), textMemoryVoltage,
         new JLabel("Pover limit:"), textPowerLimit,
-        new JLabel("Fan, min rpm:"), textFanMin,
-        new JLabel("Fan, max rpm:"), textFanMax,
+        new JLabel("Fan, min %:"), textFanMin,
+        new JLabel("Fan, max %:"), textFanMax,
         new JLabel("Target temperature:"), textTargetTemp,
         new JLabel("Stop temperature:"), textStopTemp
     };
